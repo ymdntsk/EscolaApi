@@ -23,6 +23,18 @@ namespace EscolaApi.Controllers
             return await _context.Cursos.ToListAsync();
         }
 
+        [HttpGet("buscar")]
+        public async Task<ActionResult<IEnumerable<Curso>>> BuscarCurso([FromQuery] string termo)
+        {
+            var cursos = await _context.Cursos.Where(c => c.Titulo.ToLower().Contains(termo.ToLower())).ToListAsync();
+
+            if (cursos.Count == 0) 
+            { 
+                return NotFound("Nenhum curso encontrado com o termo informado.");
+            }
+            return Ok(cursos);
+        }
+
         [HttpPost]
         public async Task<IActionResult> AddCurso(Curso curso)
         {
@@ -31,5 +43,7 @@ namespace EscolaApi.Controllers
 
             return Ok("Curso salvo com sucesso");
         }
+
+
     }
 }
